@@ -1,0 +1,1562 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: #f4f1e8;
+  color: #26352c;
+}
+
+button,
+input {
+  font: inherit;
+}
+/* =========================================
+   RHYTHM BRAND MARK
+========================================= */
+
+.rhythm-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: #26352c;
+  user-select: none;
+}
+
+.rhythm-brand-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  background: #dfe9df;
+  color: #42604b;
+
+  border: 1px solid #d2ddd2;
+  border-radius: 11px;
+}
+
+.rhythm-brand-symbol svg {
+  display: block;
+}
+
+.rhythm-brand-name {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #26352c;
+}
+
+/* Medium */
+
+.rhythm-brand-medium .rhythm-brand-symbol {
+  width: 42px;
+  height: 42px;
+}
+
+.rhythm-brand-medium .rhythm-brand-symbol svg {
+  width: 29px;
+  height: 29px;
+}
+
+.rhythm-brand-medium .rhythm-brand-name {
+  font-size: 18px;
+}
+
+/* Small */
+
+.rhythm-brand-small {
+  gap: 9px;
+}
+
+.rhythm-brand-small .rhythm-brand-symbol {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+}
+
+.rhythm-brand-small .rhythm-brand-symbol svg {
+  width: 23px;
+  height: 23px;
+}
+
+.rhythm-brand-small .rhythm-brand-name {
+  font-size: 15px;
+  letter-spacing: 2.5px;
+}
+
+/* Hover */
+
+.rhythm-brand {
+  transition: transform 0.2s ease;
+}
+
+.rhythm-brand:hover {
+  transform: translateY(-1px);
+}
+/* =========================================================
+   AUTH
+========================================================= */
+
+.auth-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px;
+
+  background: #f4f1e8;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 430px;
+
+  padding: 44px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e2d8;
+  border-radius: 24px;
+
+  box-shadow:
+    0 12px 40px rgba(30, 45, 35, 0.06);
+}
+
+.auth-heading {
+  margin-bottom: 30px;
+}
+
+.auth-heading h1 {
+  margin: 0 0 8px;
+
+  font-size: 32px;
+  line-height: 1.15;
+
+  font-weight: 600;
+
+  color: #26352c;
+}
+
+.auth-heading p {
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #788178;
+}
+
+.auth-content {
+  width: 100%;
+}
+
+.auth-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-content input {
+  width: 100%;
+  height: 50px;
+
+  padding: 0 16px;
+
+  border: 1px solid #d9ddd6;
+  border-radius: 10px;
+
+  outline: none;
+
+  background: #fafbf8;
+
+  font-size: 14px;
+  color: #26352c;
+}
+
+.auth-content input:focus {
+  border-color: #6f8f76;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(111, 143, 118, 0.12);
+}
+
+.auth-content input::placeholder {
+  color: #9ba29d;
+}
+
+.auth-content button {
+  width: 100%;
+  height: 50px;
+
+  margin-top: 6px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #42604b;
+
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.auth-content button:hover {
+  background: #354f3d;
+}
+
+.auth-content button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-error {
+  margin: 0;
+
+  padding: 10px 12px;
+
+  border-radius: 8px;
+
+  background: #fcebea;
+
+  color: #a0443e;
+
+  font-size: 13px;
+}
+
+.auth-footer {
+  margin-top: 28px;
+
+  text-align: center;
+
+  font-size: 13px;
+
+  color: #7b837d;
+}
+
+.auth-footer a {
+  color: #42604b;
+
+  font-weight: 600;
+
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   CAMERA PAGE
+========================================================= */
+
+.camera-page {
+  min-height: 100vh;
+
+  background: #f4f1e8;
+}
+
+/* =========================================================
+   CAMERA HEADER
+========================================================= */
+
+.camera-header {
+  width: 100%;
+
+  height: 76px;
+
+  padding: 0 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #e1dfd7;
+
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.camera-logout {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 14px;
+
+  border: 1px solid #dddcd4;
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #59635c;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.camera-logout:hover {
+  border-color: #bfc7bf;
+  color: #26352c;
+}
+
+/* =========================================================
+   CAMERA CONTENT
+========================================================= */
+
+.camera-content {
+  width: min(920px, calc(100% - 40px));
+
+  margin: 0 auto;
+
+  padding: 58px 0 40px;
+}
+
+/* =========================================================
+   INTRO
+========================================================= */
+
+.camera-intro {
+  max-width: 640px;
+
+  margin-bottom: 34px;
+}
+
+.camera-eyebrow {
+  margin: 0 0 12px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.8px;
+
+  color: #6f8a75;
+}
+
+.camera-intro h1 {
+  margin: 0 0 16px;
+
+  font-size: 42px;
+  line-height: 1.12;
+
+  font-weight: 600;
+
+  letter-spacing: -1px;
+
+  color: #26352c;
+}
+
+.camera-description {
+  max-width: 570px;
+
+  margin: 0;
+
+  font-size: 15px;
+  line-height: 1.7;
+
+  color: #788178;
+}
+
+/* =========================================================
+   CAMERA CARD
+========================================================= */
+
+.camera-card {
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #dfddd5;
+  border-radius: 20px;
+
+  box-shadow:
+    0 12px 40px rgba(30, 45, 35, 0.055);
+}
+
+/* =========================================================
+   CAMERA PREVIEW
+========================================================= */
+
+.camera-preview {
+  position: relative;
+
+  width: 100%;
+
+  aspect-ratio: 16 / 9;
+
+  overflow: hidden;
+
+  background: #202720;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+
+  opacity: 0;
+
+  transition: opacity 0.3s ease;
+
+  transform: scaleX(-1);
+}
+
+.camera-video.visible {
+  opacity: 1;
+}
+
+/* =========================================================
+   CAMERA STATUS
+========================================================= */
+
+.camera-status {
+  position: absolute;
+  inset: 0;
+
+  z-index: 5;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 14px;
+
+  padding: 30px;
+
+  text-align: center;
+
+  background: #202720;
+
+  color: #ffffff;
+}
+
+.camera-status p {
+  max-width: 360px;
+
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  color: #dce2dc;
+}
+
+.camera-spinner {
+  width: 28px;
+  height: 28px;
+
+  border: 2px solid rgba(255, 255, 255, 0.25);
+
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation: camera-spin 0.8s linear infinite;
+}
+
+@keyframes camera-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.camera-error-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #8c4c45;
+
+  font-weight: 700;
+}
+
+.camera-status-error p {
+  color: #e9deda;
+}
+
+.camera-retry {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  cursor: pointer;
+}
+
+.camera-retry:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* =========================================================
+   FACE GUIDE
+========================================================= */
+
+.face-guide {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  width: 250px;
+  height: 310px;
+
+  transform: translate(-50%, -50%);
+
+  pointer-events: none;
+}
+
+/* Four corners */
+
+.corner {
+  position: absolute;
+
+  width: 34px;
+  height: 34px;
+
+  border-color: rgba(255, 255, 255, 0.85);
+
+  border-style: solid;
+}
+
+.corner.top-left {
+  top: 0;
+  left: 0;
+
+  border-width: 2px 0 0 2px;
+}
+
+.corner.top-right {
+  top: 0;
+  right: 0;
+
+  border-width: 2px 2px 0 0;
+}
+
+.corner.bottom-left {
+  bottom: 0;
+  left: 0;
+
+  border-width: 0 0 2px 2px;
+}
+
+.corner.bottom-right {
+  right: 0;
+  bottom: 0;
+
+  border-width: 0 2px 2px 0;
+}
+
+/* =========================================================
+   CAMERA HINT
+========================================================= */
+
+.camera-hint {
+  position: absolute;
+
+  left: 50%;
+  bottom: 22px;
+
+  transform: translateX(-50%);
+
+  padding: 8px 13px;
+
+  border-radius: 7px;
+
+  background: rgba(20, 27, 22, 0.68);
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+/* =========================================================
+   CAMERA CONTROLS
+========================================================= */
+
+.camera-controls {
+  min-height: 92px;
+
+  padding: 20px 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+.camera-control-text {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+.camera-control-text strong {
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #26352c;
+}
+
+.camera-control-text span {
+  font-size: 12px;
+
+  color: #8a928c;
+}
+
+.capture-button {
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #42604b;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.capture-button:hover:not(:disabled) {
+  background: #354f3d;
+}
+
+.capture-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.capture-button:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+.capture-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   PRIVACY
+========================================================= */
+
+.camera-privacy {
+  max-width: 650px;
+
+  margin: 18px auto 0;
+
+  text-align: center;
+
+  font-size: 11px;
+  line-height: 1.6;
+
+  color: #969c97;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+  .camera-header {
+    height: 68px;
+
+    padding: 0 20px;
+  }
+
+  .camera-content {
+    width: calc(100% - 28px);
+
+    padding-top: 38px;
+  }
+
+  .camera-intro h1 {
+    font-size: 34px;
+  }
+
+  .camera-description {
+    font-size: 14px;
+  }
+
+  .camera-card {
+    border-radius: 16px;
+  }
+
+  .camera-preview {
+    aspect-ratio: 4 / 3;
+  }
+
+  .face-guide {
+    width: 190px;
+    height: 250px;
+  }
+
+  .camera-hint {
+    bottom: 14px;
+
+    font-size: 11px;
+  }
+
+  .camera-controls {
+    padding: 18px;
+
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .capture-button {
+    width: 100%;
+
+    justify-content: center;
+  }
+}
+
+@media (max-width: 430px) {
+  .camera-logout span {
+    display: none;
+  }
+
+  .camera-logout {
+    padding: 9px;
+  }
+
+  .camera-intro h1 {
+    font-size: 30px;
+  }
+}
+/* =========================================================
+   RECOMMENDATIONS PAGE
+========================================================= */
+
+.recommendations-page {
+  min-height: 100vh;
+  background: #f4f1e8;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.recommendations-header {
+  height: 76px;
+
+  padding: 0 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #e1dfd7;
+
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.recommendation-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.new-mood-button,
+.recommendation-logout {
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 0 13px;
+
+  border-radius: 9px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.new-mood-button {
+  border: 1px solid #d6ddd5;
+
+  background: #e9efe8;
+
+  color: #42604b;
+}
+
+.new-mood-button:hover {
+  background: #dfe9df;
+}
+
+.recommendation-logout {
+  border: 1px solid #dddcd4;
+
+  background: #ffffff;
+
+  color: #59635c;
+}
+
+.recommendation-logout:hover {
+  border-color: #bfc7bf;
+  color: #26352c;
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.recommendations-container {
+  width: min(1120px, calc(100% - 48px));
+
+  margin: 0 auto;
+
+  padding: 52px 0 70px;
+}
+
+/* =========================================================
+   MOOD HERO
+========================================================= */
+
+.mood-hero {
+  min-height: 220px;
+
+  margin-bottom: 42px;
+
+  padding: 38px 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  border: 1px solid #deddd5;
+  border-radius: 20px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 10px 30px rgba(30, 45, 35, 0.04);
+}
+
+.mood-hero-text {
+  max-width: 650px;
+}
+
+.recommendation-eyebrow {
+  margin: 0 0 12px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 1.8px;
+
+  color: #6f8a75;
+}
+
+.mood-hero h1 {
+  margin: 0 0 12px;
+
+  font-size: 42px;
+  line-height: 1.15;
+
+  font-weight: 600;
+
+  letter-spacing: -1px;
+
+  color: #26352c;
+}
+
+.mood-hero h1 span {
+  color: #42604b;
+}
+
+.mood-hero-text > p:last-child {
+  max-width: 550px;
+
+  margin: 0;
+
+  font-size: 14px;
+  line-height: 1.65;
+
+  color: #7b837d;
+}
+
+.mood-confidence {
+  min-width: 210px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 15px 18px;
+
+  border: 1px solid #e0e3dd;
+  border-radius: 12px;
+
+  background: #fafbf8;
+}
+
+.mood-icon {
+  width: 46px;
+  height: 46px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #dfe9df;
+
+  color: #42604b;
+}
+
+.mood-confidence div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.mood-confidence strong {
+  font-size: 14px;
+
+  color: #26352c;
+}
+
+.mood-confidence span {
+  font-size: 10px;
+
+  color: #8b938d;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.recommendation-section {
+  margin-bottom: 48px;
+}
+
+.section-heading {
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+
+  gap: 20px;
+}
+
+.section-heading h2 {
+  margin: 0 0 5px;
+
+  font-size: 20px;
+
+  font-weight: 600;
+
+  color: #26352c;
+}
+
+.section-heading p {
+  margin: 0;
+
+  font-size: 12px;
+
+  color: #89908a;
+}
+
+.section-count {
+  min-width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: #e7ece6;
+
+  color: #526659;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   SONG GRID
+========================================================= */
+
+.song-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.featured-song-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 14px;
+}
+
+/* =========================================================
+   SONG CARD
+========================================================= */
+
+.song-card {
+  position: relative;
+
+  min-width: 0;
+
+  padding: 12px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  border: 1px solid #e0dfd8;
+  border-radius: 13px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.song-card:hover {
+  border-color: #cbd2ca;
+
+  box-shadow:
+    0 7px 22px rgba(30, 45, 35, 0.05);
+
+  transform: translateY(-1px);
+}
+
+.song-card-featured {
+  display: block;
+
+  padding: 13px;
+}
+
+.song-art {
+  position: relative;
+
+  width: 58px;
+  height: 58px;
+
+  flex-shrink: 0;
+
+  overflow: hidden;
+
+  border-radius: 9px;
+
+  background: #e6ebe5;
+}
+
+.song-card-featured .song-art {
+  width: 100%;
+  height: 170px;
+
+  margin-bottom: 13px;
+
+  border-radius: 10px;
+}
+
+.song-art img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.song-art-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #e4ebe3;
+
+  color: #607566;
+}
+
+.song-play {
+  position: absolute;
+
+  right: 6px;
+  bottom: 6px;
+
+  width: 29px;
+  height: 29px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: #42604b;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.12);
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.song-card:hover .song-play,
+.song-card-featured .song-play {
+  opacity: 1;
+}
+
+.song-info {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.song-info h3 {
+  overflow: hidden;
+
+  margin: 0 0 4px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: #26352c;
+}
+
+.song-info p {
+  overflow: hidden;
+
+  margin: 0 0 5px;
+
+  font-size: 11px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: #727b74;
+}
+
+.song-info span {
+  font-size: 9px;
+
+  color: #a0a6a1;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.5px;
+}
+
+.song-like {
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 7px;
+
+  background: transparent;
+
+  color: #a0a6a1;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.song-like:hover {
+  background: #f1f3ef;
+
+  color: #42604b;
+}
+
+.song-like.liked {
+  color: #42604b;
+}
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.recommendation-loading {
+  min-height: calc(100vh - 76px);
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.recommendation-spinner {
+  width: 30px;
+  height: 30px;
+
+  margin-bottom: 20px;
+
+  border: 2px solid #dce3dc;
+
+  border-top-color: #42604b;
+
+  border-radius: 50%;
+
+  animation:
+    recommendation-spin 0.8s linear infinite;
+}
+
+@keyframes recommendation-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.recommendation-loading h2 {
+  margin: 0 0 8px;
+
+  font-size: 20px;
+  font-weight: 600;
+
+  color: #26352c;
+}
+
+.recommendation-loading p {
+  margin: 0;
+
+  font-size: 13px;
+
+  color: #858d87;
+}
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.recommendation-error {
+  min-height: calc(100vh - 76px);
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 30px;
+}
+
+.recommendation-error-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+
+  border-radius: 50%;
+
+  background: #f2dfdc;
+
+  color: #a0443e;
+
+  font-weight: 700;
+}
+
+.recommendation-error h2 {
+  margin: 0 0 8px;
+
+  font-size: 21px;
+
+  color: #26352c;
+}
+
+.recommendation-error p {
+  max-width: 420px;
+
+  margin: 0 0 20px;
+
+  font-size: 13px;
+  line-height: 1.6;
+
+  color: #858d87;
+}
+
+.recommendation-error-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.recommendation-error-actions button,
+.recommendation-empty button {
+  height: 40px;
+
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #42604b;
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.recommendation-error-actions .secondary {
+  border: 1px solid #d9ddd6;
+
+  background: #ffffff;
+
+  color: #526058;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.recommendation-empty {
+  padding: 60px 30px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+
+  text-align: center;
+
+  border: 1px dashed #cfd4cd;
+  border-radius: 16px;
+
+  color: #6d7b70;
+}
+
+.recommendation-empty h2 {
+  margin: 15px 0 7px;
+
+  font-size: 18px;
+
+  color: #26352c;
+}
+
+.recommendation-empty p {
+  max-width: 450px;
+
+  margin: 0 0 20px;
+
+  font-size: 12px;
+  line-height: 1.6;
+
+  color: #89908a;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 850px) {
+  .recommendations-header {
+    padding: 0 24px;
+  }
+
+  .recommendations-container {
+    width: calc(100% - 32px);
+
+    padding-top: 36px;
+  }
+
+  .mood-hero {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    padding: 30px;
+  }
+
+  .mood-confidence {
+    width: 100%;
+  }
+
+  .featured-song-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .recommendations-header {
+    height: 68px;
+
+    padding: 0 18px;
+  }
+
+  .recommendation-logout span {
+    display: none;
+  }
+
+  .recommendation-logout {
+    width: 38px;
+
+    justify-content: center;
+
+    padding: 0;
+  }
+
+  .new-mood-button {
+    padding: 0 10px;
+  }
+
+  .recommendations-container {
+    width: calc(100% - 24px);
+
+    padding-bottom: 45px;
+  }
+
+  .mood-hero {
+    margin-bottom: 34px;
+
+    padding: 24px;
+
+    border-radius: 16px;
+  }
+
+  .mood-hero h1 {
+    font-size: 32px;
+  }
+
+  .mood-confidence {
+    min-width: 0;
+  }
+
+  .song-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-song-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .song-card-featured {
+    display: flex;
+
+    padding: 12px;
+  }
+
+  .song-card-featured .song-art {
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 0;
+  }
+
+  .section-heading h2 {
+    font-size: 18px;
+  }
+
+  .section-heading p {
+    max-width: 270px;
+  }
+}
