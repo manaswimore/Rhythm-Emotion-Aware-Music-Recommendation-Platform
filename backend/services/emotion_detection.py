@@ -15,13 +15,15 @@ DATA_URL_PATTERN = re.compile(
 
 def decode_base64_image(image_data: str):
     """
-    Convert a frontend data URL into an OpenCV image.
+    Convert a frontend image data URL into an OpenCV image.
     """
 
     if not isinstance(image_data, str):
         raise ValueError("Image must be a base64 string.")
 
-    match = DATA_URL_PATTERN.match(image_data.strip())
+    image_data = image_data.strip()
+
+    match = DATA_URL_PATTERN.match(image_data)
 
     if not match:
         raise ValueError(
@@ -40,6 +42,9 @@ def decode_base64_image(image_data: str):
             "Invalid base64 image data."
         ) from exc
 
+    if not image_bytes:
+        raise ValueError("The image data is empty.")
+
     image_array = np.frombuffer(
         image_bytes,
         dtype=np.uint8,
@@ -55,15 +60,28 @@ def decode_base64_image(image_data: str):
             "Unable to decode the uploaded image."
         )
 
+    if image.size == 0:
+        raise ValueError(
+            "The uploaded image is empty."
+        )
+
     return image
 
 
 def detect_emotion(image_data: str):
     """
-    Detect the dominant facial emotion from an image.
+    Detect the dominant facial emotion from a base64 image.
     """
 
     image = decode_base64_image(image_data)
+
+    # Basic image validation
+    height, width = image.shape[:2]
+
+    if width < 100 or height < 100:
+        raise ValueError(
+            "Image is too small. Please capture your face again."
+        )
 
     try:
         results = DeepFace.analyze(
@@ -74,30 +92,44 @@ def detect_emotion(image_data: str):
         )
 
     except Exception as exc:
+        print(
+            "DEEPFACE ERROR:",
+            repr(exc),
+            flush=True,
+        )
+
         raise ValueError(
-            "No detectable face was found in the image."
+            "No detectable face was found. "
+            "Please make sure your face is clearly visible, "
+            "well lit, and centered in the camera."
         ) from exc
 
     if not results:
         raise ValueError(
-            "No face was detected."
+            "No face was detected in the image."
         )
 
-    # DeepFace can return either a dictionary
-    # or a list depending on the version/configuration.
-    result = (
-        results[0]
-        if isinstance(results, list)
-        else results
-    )
+    # DeepFace normally returns a list.
+    if isinstance(results, list):
+        result = results[0]
+    else:
+        result = results
+
+    if not isinstance(result, dict):
+        raise ValueError(
+            "Unexpected response from emotion detection."
+        )
 
     emotion = result.get("dominant_emotion")
 
-    emotions = result.get("emotion", {})
+    emotions = result.get(
+        "emotion",
+        {},
+    )
 
     if not emotion:
         raise ValueError(
-            "Emotion detection did not return a result."
+            "Emotion detection did not return a dominant emotion."
         )
 
     confidence = emotions.get(
@@ -105,10 +137,15 @@ def detect_emotion(image_data: str):
         0,
     )
 
+    try:
+        confidence = float(confidence) / 100
+    except (TypeError, ValueError):
+        confidence = 0
+
     return {
-        "emotion": emotion.lower(),
+        "emotion": str(emotion).lower(),
         "confidence": round(
-            float(confidence) / 100,
+            confidence,
             4,
         ),
     }
