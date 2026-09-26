@@ -11,127 +11,70 @@ from routes.emotion import emotion_bp
 from routes.recommendations import recommendation_bp
 
 
-# ==========================================================
-# APPLICATION FACTORY
-# ==========================================================
-
 def create_app():
-    """
-    Create and configure the RHYTHM Flask application.
-    """
-
     app = Flask(__name__)
 
-    # ======================================================
-    # CONFIGURATION
-    # ======================================================
-
     Config.validate()
-
     app.config.from_object(Config)
-
-    # ======================================================
-    # JWT CONFIGURATION
-    # ======================================================
 
     jwt.init_app(app)
 
-    # ======================================================
-    # CORS CONFIGURATION
-    # ======================================================
-
+    # Allow the deployed Vercel frontend.
     allowed_origins = [
-        origin.strip()
-        for origin in Config.FRONTEND_URL.split(",")
-        if origin.strip()
+        "https://rhythm-emotion-aware-music-recommendation-platform-122kh4rk8.vercel.app",
+        "http://localhost:5173",
     ]
 
     CORS(
         app,
         resources={
             r"/api/*": {
-                "origins": allowed_origins
+                "origins": allowed_origins,
+                "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+                "allow_headers": ["Content-Type", "Authorization"],
+                "supports_credentials": False,
             }
-        }
+        },
     )
-
-    # ======================================================
-    # DATABASE
-    # ======================================================
 
     initialize_database(app)
 
-    # ======================================================
-    # REGISTER API BLUEPRINTS
-    # ======================================================
-
-    app.register_blueprint(
-        health_bp
-    )
-
-    app.register_blueprint(
-        auth_bp
-    )
-
-    app.register_blueprint(
-        emotion_bp
-    )
-
-    app.register_blueprint(
-        recommendation_bp
-    )
-
-    # ======================================================
-    # ROOT ENDPOINT
-    # ======================================================
+    app.register_blueprint(health_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(emotion_bp)
+    app.register_blueprint(recommendation_bp)
 
     @app.get("/")
     def root():
         return jsonify({
             "name": "RHYTHM API",
             "message": "RHYTHM backend is running.",
-            "status": "ok"
+            "status": "ok",
         }), 200
-
-    # ======================================================
-    # 404 ERROR HANDLER
-    # ======================================================
 
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({
             "success": False,
-            "message": "API endpoint not found."
+            "message": "API endpoint not found.",
         }), 404
-
-    # ======================================================
-    # 500 ERROR HANDLER
-    # ======================================================
 
     @app.errorhandler(500)
     def internal_server_error(error):
         return jsonify({
             "success": False,
-            "message": "Internal server error."
+            "message": "Internal server error.",
         }), 500
 
     return app
 
 
-# ==========================================================
-# CREATE FLASK APPLICATION
-# ==========================================================
-
 app = create_app()
 
-
-# ==========================================================
-# LOCAL DEVELOPMENT SERVER
-# ==========================================================
 
 if __name__ == "__main__":
     app.run(
         host="127.0.0.1",
         port=5000,
-        debug=True
+        debug=True,
     )
