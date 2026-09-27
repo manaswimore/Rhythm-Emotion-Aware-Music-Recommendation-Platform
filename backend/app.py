@@ -19,9 +19,9 @@ def create_app():
 
     jwt.init_app(app)
 
-    # Production + local frontend origins.
+    # Allow Vercel deployments and local development.
     allowed_origins = [
-        r"https://.*\.vercel\.app",
+        "https://rhythm-emotion-aware-music-recommendation-platform-rhk5ri8mv.vercel.app",
         "http://localhost:5173",
     ]
 
@@ -53,6 +53,22 @@ def create_app():
     app.register_blueprint(emotion_bp)
     app.register_blueprint(recommendation_bp)
 
+    @app.after_request
+    def add_cors_headers(response):
+        origin = request_origin()
+
+        if origin in allowed_origins:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Headers"] = (
+                "Content-Type, Authorization"
+            )
+            response.headers["Access-Control-Allow-Methods"] = (
+                "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            )
+            response.headers["Vary"] = "Origin"
+
+        return response
+
     @app.get("/")
     def root():
         return jsonify({
@@ -76,6 +92,11 @@ def create_app():
         }), 500
 
     return app
+
+
+def request_origin():
+    from flask import request
+    return request.headers.get("Origin")
 
 
 app = create_app()
