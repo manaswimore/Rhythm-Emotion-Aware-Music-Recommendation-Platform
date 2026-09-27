@@ -63,6 +63,7 @@ def create_app():
             response.headers["Access-Control-Allow-Methods"] = (
                 "GET, POST, PUT, PATCH, DELETE, OPTIONS"
             )
+            response.headers["Vary"] = "Origin"
 
         return response
 
