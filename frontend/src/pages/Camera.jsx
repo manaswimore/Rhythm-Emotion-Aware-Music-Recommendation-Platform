@@ -26,6 +26,7 @@ export default function Camera() {
 
   const startCamera = async () => {
     setError("");
+    setCameraReady(false);
 
     try {
       if (!navigator.mediaDevices?.getUserMedia) {
@@ -51,12 +52,21 @@ export default function Camera() {
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+
+        await new Promise((resolve) => {
+          if (videoRef.current.readyState >= 2) {
+            resolve();
+          } else {
+            videoRef.current.onloadedmetadata = resolve;
+          }
+        });
+
         await videoRef.current.play();
       }
 
       setCameraReady(true);
     } catch (err) {
-      console.error(err);
+      console.error("CAMERA START ERROR:", err);
 
       setCameraReady(false);
 
@@ -65,9 +75,7 @@ export default function Camera() {
           "Camera permission was denied. Please allow camera access in your browser."
         );
       } else if (err.name === "NotFoundError") {
-        setError(
-          "No camera was found on this device."
-        );
+        setError("No camera was found on this device.");
       } else {
         setError(
           "Unable to access your camera. Please check your browser permissions."
@@ -87,7 +95,19 @@ export default function Camera() {
   };
 
   const captureImage = async () => {
+    console.log("=================================");
+    console.log("RHYTHM: Capture button clicked");
+    console.log("=================================");
+
     if (!videoRef.current || !canvasRef.current) {
+      console.error("VIDEO OR CANVAS REF IS MISSING");
+      setError("Camera is not ready. Please try again.");
+      return;
+    }
+
+    if (!cameraReady) {
+      console.error("CAMERA IS NOT READY");
+      setError("Camera is not ready. Please try again.");
       return;
     }
 
@@ -98,10 +118,25 @@ export default function Camera() {
       const video = videoRef.current;
       const canvas = canvasRef.current;
 
+      console.log("Video dimensions:", {
+        width: video.videoWidth,
+        height: video.videoHeight,
+      });
+
+      if (!video.videoWidth || !video.videoHeight) {
+        throw new Error(
+          "Camera image is not ready yet. Please wait a moment and try again."
+        );
+      }
+
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
       const context = canvas.getContext("2d");
+
+      if (!context) {
+        throw new Error("Unable to create image canvas.");
+      }
 
       context.drawImage(
         video,
@@ -113,32 +148,108 @@ export default function Camera() {
 
       const image = canvas.toDataURL(
         "image/jpeg",
-        0.9
+        0.85
       );
 
+      console.log("Image captured successfully.");
+      console.log("Image type:", image.substring(0, 30));
+      console.log(
+        "Image size:",
+        Math.round(image.length / 1024),
+        "KB"
+      );
+
+      /*
+       * Stop the camera only after the image
+       * has been successfully captured.
+       */
       stopCamera();
+
+      console.log(
+        "Sending POST request to:",
+        "/emotion/detect"
+      );
 
       const response = await api.post(
         "/emotion/detect",
         {
-          image,
+          image: image,
+        },
+        {
+          timeout: 120000,
         }
       );
 
-      const detectedEmotion = response.data.emotion;
-      const confidence = response.data.confidence;
+      console.log(
+        "Emotion API response:",
+        response.data
+      );
+
+      if (!response.data?.success) {
+        throw new Error(
+          response.data?.message ||
+            "Emotion detection failed."
+        );
+      }
+
+      const detectedEmotion =
+        response.data.emotion;
+
+      const confidence =
+        response.data.confidence;
+
+      console.log(
+        "Detected emotion:",
+        detectedEmotion
+      );
+
+      console.log(
+        "Confidence:",
+        confidence
+      );
 
       navigate("/recommendations", {
         state: {
           emotion: detectedEmotion,
-          confidence,
+          confidence: confidence,
         },
       });
     } catch (err) {
-      console.error(err);
+      console.error(
+        "================================="
+      );
+
+      console.error(
+        "RHYTHM EMOTION DETECTION ERROR"
+      );
+
+      console.error(
+        "================================="
+      );
+
+      console.error("Error:", err);
+
+      if (err.response) {
+        console.error(
+          "HTTP status:",
+          err.response.status
+        );
+
+        console.error(
+          "Server response:",
+          err.response.data
+        );
+      }
+
+      if (err.request) {
+        console.error(
+          "Request was created but no response was received."
+        );
+      }
 
       const message =
         err.response?.data?.message ||
+        err.message ||
         "Unable to detect your emotion. Please try again.";
 
       setError(message);
@@ -160,13 +271,7 @@ export default function Camera() {
 
   return (
     <main className="camera-page">
-
-      {/* =========================
-          TOP BAR
-      ========================= */}
-
       <header className="camera-header">
-
         <BrandMark size="small" />
 
         <button
@@ -177,17 +282,10 @@ export default function Camera() {
           <LogOut size={16} />
           <span>Logout</span>
         </button>
-
       </header>
 
-      {/* =========================
-          MAIN CONTENT
-      ========================= */}
-
       <section className="camera-content">
-
         <div className="camera-intro">
-
           <p className="camera-eyebrow">
             EMOTION CHECK
           </p>
@@ -203,17 +301,10 @@ export default function Camera() {
             analyze your expression and create a
             personalized music experience.
           </p>
-
         </div>
 
-        {/* =========================
-            CAMERA CARD
-        ========================= */}
-
         <div className="camera-card">
-
           <div className="camera-preview">
-
             {!cameraReady && !error && (
               <div className="camera-status">
                 <div className="camera-spinner" />
@@ -226,14 +317,11 @@ export default function Camera() {
 
             {error && !cameraReady && (
               <div className="camera-status camera-status-error">
-
                 <div className="camera-error-icon">
                   !
                 </div>
 
-                <p>
-                  {error}
-                </p>
+                <p>{error}</p>
 
                 <button
                   type="button"
@@ -243,7 +331,6 @@ export default function Camera() {
                   <RotateCcw size={15} />
                   Try again
                 </button>
-
               </div>
             )}
 
@@ -259,35 +346,22 @@ export default function Camera() {
 
             {cameraReady && (
               <>
-
-                {/* Face guide */}
-
                 <div className="face-guide">
-
                   <span className="corner top-left" />
                   <span className="corner top-right" />
                   <span className="corner bottom-left" />
                   <span className="corner bottom-right" />
-
                 </div>
 
                 <div className="camera-hint">
                   Position your face inside the frame
                 </div>
-
               </>
             )}
-
           </div>
 
-          {/* =========================
-              CAMERA CONTROLS
-          ========================= */}
-
           <div className="camera-controls">
-
             <div className="camera-control-text">
-
               <strong>
                 Ready when you are
               </strong>
@@ -295,7 +369,6 @@ export default function Camera() {
               <span>
                 Keep your face clearly visible.
               </span>
-
             </div>
 
             <button
@@ -304,7 +377,6 @@ export default function Camera() {
               onClick={captureImage}
               disabled={!cameraReady || capturing}
             >
-
               <span className="capture-icon">
                 <CameraIcon size={21} />
               </span>
@@ -314,25 +386,22 @@ export default function Camera() {
                   ? "Analyzing..."
                   : "Capture mood"}
               </span>
-
             </button>
-
           </div>
-
         </div>
 
         <p className="camera-privacy">
           Your camera is used only to detect your current
           facial expression for this recommendation session.
         </p>
-
       </section>
 
       <canvas
         ref={canvasRef}
-        style={{ display: "none" }}
+        style={{
+          display: "none",
+        }}
       />
-
     </main>
   );
 }
