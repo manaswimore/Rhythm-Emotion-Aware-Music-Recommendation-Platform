@@ -7,5 +7,4 @@ gunicorn==23.0.0
 
 deepface[tensorflow]==0.0.101
 tf-keras==2.21.0
-
 opencv-python==4.11.0.86
