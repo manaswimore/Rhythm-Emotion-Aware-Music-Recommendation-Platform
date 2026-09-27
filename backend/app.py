@@ -45,9 +45,7 @@ def create_app():
                     "Content-Type",
                     "Authorization",
                 ],
-                "expose_headers": [],
                 "supports_credentials": False,
-                "send_wildcard": False,
                 "always_send": True,
                 "automatic_options": True,
                 "vary_header": True,
@@ -67,9 +65,24 @@ def create_app():
             response.headers["Access-Control-Allow-Methods"] = (
                 "GET, POST, PUT, PATCH, DELETE, OPTIONS"
             )
+            response.headers["Access-Control-Max-Age"] = "600"
             response.headers["Vary"] = "Origin"
 
         return response
+
+    @app.route("/api/emotion/detect", methods=["OPTIONS"])
+    def emotion_detect_options():
+        response = jsonify({"success": True})
+        origin = request.headers.get("Origin")
+        if origin in allowed_origins:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Headers"] = (
+                "Content-Type, Authorization"
+            )
+            response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+            response.headers["Access-Control-Max-Age"] = "600"
+            response.headers["Vary"] = "Origin"
+        return response, 204
 
     @app.get("/")
     def index():
