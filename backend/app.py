@@ -34,53 +34,10 @@ def create_app():
         resources={r"/api/*": {"origins": ALLOWED_ORIGINS}},
         methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allow_headers=["Content-Type", "Authorization"],
-        expose_headers=["Authorization"],
         supports_credentials=False,
         automatic_options=True,
         vary_header=True,
     )
-
-    @app.before_request
-    def handle_preflight():
-        if request.method != "OPTIONS":
-            return None
-
-        origin = request.headers.get("Origin")
-        if origin not in ALLOWED_ORIGINS:
-            return jsonify({
-                "success": False,
-                "message": "Origin not allowed.",
-            }), 403
-
-        requested_headers = request.headers.get(
-            "Access-Control-Request-Headers",
-            "Content-Type, Authorization",
-        )
-
-        response = app.make_response(("", 204))
-        response.headers["Access-Control-Allow-Origin"] = origin
-        response.headers["Access-Control-Allow-Methods"] = (
-            "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-        )
-        response.headers["Access-Control-Allow-Headers"] = requested_headers
-        response.headers["Access-Control-Max-Age"] = "600"
-        response.headers["Vary"] = "Origin"
-        return response
-
-    @app.after_request
-    def add_cors_headers(response):
-        origin = request.headers.get("Origin")
-        if origin in ALLOWED_ORIGINS:
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Headers"] = (
-                "Content-Type, Authorization"
-            )
-            response.headers["Access-Control-Allow-Methods"] = (
-                "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-            )
-            response.headers["Access-Control-Max-Age"] = "600"
-            response.headers["Vary"] = "Origin"
-        return response
 
     @app.errorhandler(413)
     def payload_too_large(_error):
