@@ -60,12 +60,17 @@ def detect_emotion(image_data: str):
     )
 
     try:
+        print("EMOTION: starting DeepFace.analyze", flush=True)
+
         results = DeepFace.analyze(
             img_path=image,
             actions=["emotion"],
             enforce_detection=True,
             detector_backend="opencv",
         )
+
+        print("EMOTION: DeepFace.analyze returned", flush=True)
+
     except ValueError as exc:
         print(
             "DEEPFACE FACE DETECTION ERROR:",
@@ -77,6 +82,7 @@ def detect_emotion(image_data: str):
             "Please make sure your face is clearly visible, "
             "well lit, and centered in the camera."
         ) from exc
+
     except Exception as exc:
         print(
             "DEEPFACE RUNTIME ERROR:",
