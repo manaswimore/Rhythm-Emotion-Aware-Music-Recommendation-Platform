@@ -15,17 +15,14 @@ def create_app():
     Config.validate()
 
     app = Flask(__name__)
-
+    app.config["MAX_CONTENT_LENGTH"] = 8 * 1024 * 1024
     app.config["JWT_SECRET_KEY"] = Config.JWT_SECRET_KEY
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = Config.JWT_ACCESS_TOKEN_EXPIRES
 
     JWTManager(app)
 
-    # Initialize MongoDB before serving health/auth/recommendation requests.
     initialize_database(app)
 
-    # Register CORS before database initialization so even startup/runtime
-    # failures can be handled consistently by the app's request pipeline.
     allowed_origins = [
         "https://rhythm-emotion-aware-music-recommendation-platform.vercel.app",
         "http://localhost:5173",
@@ -36,20 +33,9 @@ def create_app():
         resources={
             r"/api/*": {
                 "origins": allowed_origins,
-                "methods": [
-                    "GET",
-                    "POST",
-                    "PUT",
-                    "PATCH",
-                    "DELETE",
-                    "OPTIONS",
-                ],
-                "allow_headers": [
-                    "Content-Type",
-                    "Authorization",
-                ],
+                "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+                "allow_headers": ["Content-Type", "Authorization"],
                 "supports_credentials": False,
-                "always_send": True,
                 "automatic_options": True,
                 "vary_header": True,
             }
@@ -59,19 +45,32 @@ def create_app():
     @app.after_request
     def add_cors_headers(response):
         origin = request.headers.get("Origin")
-
         if origin in allowed_origins:
             response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Headers"] = (
-                "Content-Type, Authorization"
-            )
-            response.headers["Access-Control-Allow-Methods"] = (
-                "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-            )
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
             response.headers["Access-Control-Max-Age"] = "600"
             response.headers["Vary"] = "Origin"
-
         return response
+
+    @app.route("/api/emotion/detect", methods=["OPTIONS"])
+    def emotion_detect_options():
+        response = app.response_class(status=204)
+        origin = request.headers.get("Origin")
+        if origin in allowed_origins:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+            response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+            response.headers["Access-Control-Max-Age"] = "600"
+            response.headers["Vary"] = "Origin"
+        return response
+
+    @app.errorhandler(413)
+    def payload_too_large(_error):
+        return jsonify({
+            "success": False,
+            "message": "Captured image is too large. Please try again.",
+        }), 413
 
     @app.get("/")
     def index():
