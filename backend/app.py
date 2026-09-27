@@ -21,6 +21,9 @@ def create_app():
 
     JWTManager(app)
 
+    # Initialize MongoDB before serving health/auth/recommendation requests.
+    initialize_database(app)
+
     # Register CORS before database initialization so even startup/runtime
     # failures can be handled consistently by the app's request pipeline.
     allowed_origins = [
