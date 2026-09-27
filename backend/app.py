@@ -19,9 +19,9 @@ def create_app():
 
     jwt.init_app(app)
 
-    # Allow the deployed Vercel frontend.
+    # Production + local frontend origins.
     allowed_origins = [
-        "https://rhythm-emotion-aware-music-recommendation-platform-122kh4rk8.vercel.app",
+        r"https://.*\.vercel\.app",
         "http://localhost:5173",
     ]
 
@@ -30,9 +30,18 @@ def create_app():
         resources={
             r"/api/*": {
                 "origins": allowed_origins,
-                "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-                "allow_headers": ["Content-Type", "Authorization"],
-                "supports_credentials": False,
+                "methods": [
+                    "GET",
+                    "POST",
+                    "PUT",
+                    "PATCH",
+                    "DELETE",
+                    "OPTIONS",
+                ],
+                "allow_headers": [
+                    "Content-Type",
+                    "Authorization",
+                ],
             }
         },
     )
