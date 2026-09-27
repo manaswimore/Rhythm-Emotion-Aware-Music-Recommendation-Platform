@@ -14,10 +14,7 @@ emotion_bp = Blueprint(
 @emotion_bp.post("/detect")
 @jwt_required()
 def detect():
-
-    data = request.get_json(
-        silent=True
-    )
+    data = request.get_json(silent=True)
 
     if not data:
         return jsonify({
@@ -30,11 +27,10 @@ def detect():
     if not image:
         return jsonify({
             "success": False,
-            "message": "Image is required.",
+        "message": "Image is required.",
         }), 400
 
     try:
-
         result = detect_emotion(image)
 
         return jsonify({
@@ -44,15 +40,19 @@ def detect():
         }), 200
 
     except ValueError as exc:
-
         return jsonify({
             "success": False,
             "message": str(exc),
         }), 422
 
-    except Exception:
+    except Exception as exc:
+        print(
+            "EMOTION ENDPOINT ERROR:",
+            repr(exc),
+            flush=True,
+        )
 
         return jsonify({
             "success": False,
-            "message": "Emotion detection failed.",
+            "message": "Emotion detection failed on the server.",
         }), 500
