@@ -23,10 +23,9 @@ def create_app():
 
     initialize_database(app)
 
-    # Allow the deployed Vercel frontend and local development.
     allowed_origins = [
-    "https://rhythm-emotion-aware-music-recommendation-platform.vercel.app",
-    "http://localhost:5173",
+        "https://rhythm-emotion-aware-music-recommendation-platform.vercel.app",
+        "http://localhost:5173",
     ]
 
     CORS(
@@ -46,7 +45,12 @@ def create_app():
                     "Content-Type",
                     "Authorization",
                 ],
+                "expose_headers": [],
                 "supports_credentials": False,
+                "send_wildcard": False,
+                "always_send": True,
+                "automatic_options": True,
+                "vary_header": True,
             }
         },
     )
