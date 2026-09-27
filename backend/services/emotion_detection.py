@@ -45,70 +45,107 @@ def decode_base64_image(image_data: str):
     return image
 
 
+def detect_face(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    cascade_path = (
+        cv2.data.haarcascades
+        + "haarcascade_frontalface_default.xml"
+    )
+
+    face_cascade = cv2.CascadeClassifier(cascade_path)
+
+    if face_cascade.empty():
+        raise RuntimeError("OpenCV face detector could not be loaded.")
+
+    faces = face_cascade.detectMultiScale(
+        gray,
+        scaleFactor=1.1,
+        minNeighbors=5,
+        minSize=(80, 80),
+    )
+
+    if len(faces) == 0:
+        raise ValueError(
+            "No face detected. Please keep your face clearly visible "
+            "and centered in the camera."
+        )
+
+    x, y, w, h = max(
+        faces,
+        key=lambda face: face[2] * face[3],
+    )
+
+    padding = int(0.25 * max(w, h))
+
+    x1 = max(0, x - padding)
+    y1 = max(0, y - padding)
+    x2 = min(image.shape[1], x + w + padding)
+    y2 = min(image.shape[0], y + h + padding)
+
+    face = image[y1:y2, x1:x2]
+
+    if face.size == 0:
+        raise ValueError("Unable to crop the detected face.")
+
+    return face
+
+
 def detect_emotion(image_data: str):
     image = decode_base64_image(image_data)
     height, width = image.shape[:2]
+
+    print(f"EMOTION: received image {width}x{height}", flush=True)
 
     if width < 100 or height < 100:
         raise ValueError(
             "Image is too small. Please capture your face again."
         )
 
+    print("EMOTION: detecting face with OpenCV", flush=True)
+    face = detect_face(image)
+
+    face_height, face_width = face.shape[:2]
     print(
-        f"EMOTION: received image {width}x{height}",
+        f"EMOTION: face cropped {face_width}x{face_height}",
         flush=True,
     )
 
     try:
-        print("EMOTION: starting DeepFace.analyze", flush=True)
+        print(
+            "EMOTION: starting DeepFace emotion analysis",
+            flush=True,
+        )
 
-        results = DeepFace.analyze(
-            img_path=image,
+        result = DeepFace.analyze(
+            img_path=face,
             actions=["emotion"],
-            enforce_detection=True,
-            detector_backend="opencv",
+            enforce_detection=False,
+            detector_backend="skip",
         )
 
         print("EMOTION: DeepFace.analyze returned", flush=True)
 
-    except ValueError as exc:
-        print(
-            "DEEPFACE FACE DETECTION ERROR:",
-            repr(exc),
-            flush=True,
-        )
-        raise ValueError(
-            "No detectable face was found. "
-            "Please make sure your face is clearly visible, "
-            "well lit, and centered in the camera."
-        ) from exc
-
     except Exception as exc:
-        print(
-            "DEEPFACE RUNTIME ERROR:",
-            repr(exc),
-            flush=True,
-        )
+        print("DEEPFACE ERROR:", repr(exc), flush=True)
         raise RuntimeError(
-            "Emotion detection service failed during DeepFace processing."
+            "Emotion analysis failed on the server."
         ) from exc
 
-    if not results:
-        raise ValueError("No face was detected in the image.")
+    if not result:
+        raise RuntimeError("Emotion detection returned no result.")
 
-    result = results[0] if isinstance(results, list) else results
+    result = result[0] if isinstance(result, list) else result
 
     if not isinstance(result, dict):
-        raise RuntimeError("Unexpected response from emotion detection.")
+        raise RuntimeError("Unexpected response from DeepFace.")
 
     emotion = result.get("dominant_emotion")
-    emotions = result.get("emotion", {})
 
     if not emotion:
-        raise RuntimeError(
-            "Emotion detection did not return a dominant emotion."
-        )
+        raise RuntimeError("DeepFace did not return an emotion.")
 
+    emotions = result.get("emotion", {})
     confidence = emotions.get(emotion, 0)
 
     try:
