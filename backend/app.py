@@ -11,6 +11,12 @@ from routes.emotion import emotion_bp
 from routes.recommendations import recommendation_bp
 
 
+ALLOWED_ORIGINS = [
+    "https://rhythm-emotion-aware-music-recommendation-platform.vercel.app",
+    "http://localhost:5173",
+]
+
+
 def create_app():
     Config.validate()
 
@@ -23,44 +29,55 @@ def create_app():
 
     initialize_database(app)
 
-    allowed_origins = [
-        "https://rhythm-emotion-aware-music-recommendation-platform.vercel.app",
-        "http://localhost:5173",
-    ]
-
     CORS(
         app,
-        resources={
-            r"/api/*": {
-                "origins": allowed_origins,
-                "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-                "allow_headers": ["Content-Type", "Authorization"],
-                "supports_credentials": False,
-                "automatic_options": True,
-                "vary_header": True,
-            }
-        },
+        resources={r"/api/*": {"origins": ALLOWED_ORIGINS}},
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization"],
+        expose_headers=["Authorization"],
+        supports_credentials=False,
+        automatic_options=True,
+        vary_header=True,
     )
+
+    @app.before_request
+    def handle_preflight():
+        if request.method != "OPTIONS":
+            return None
+
+        origin = request.headers.get("Origin")
+        if origin not in ALLOWED_ORIGINS:
+            return jsonify({
+                "success": False,
+                "message": "Origin not allowed.",
+            }), 403
+
+        requested_headers = request.headers.get(
+            "Access-Control-Request-Headers",
+            "Content-Type, Authorization",
+        )
+
+        response = app.make_response(("", 204))
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = (
+            "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        )
+        response.headers["Access-Control-Allow-Headers"] = requested_headers
+        response.headers["Access-Control-Max-Age"] = "600"
+        response.headers["Vary"] = "Origin"
+        return response
 
     @app.after_request
     def add_cors_headers(response):
         origin = request.headers.get("Origin")
-        if origin in allowed_origins:
+        if origin in ALLOWED_ORIGINS:
             response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
-            response.headers["Access-Control-Max-Age"] = "600"
-            response.headers["Vary"] = "Origin"
-        return response
-
-    @app.route("/api/emotion/detect", methods=["OPTIONS"])
-    def emotion_detect_options():
-        response = app.response_class(status=204)
-        origin = request.headers.get("Origin")
-        if origin in allowed_origins:
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
-            response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = (
+                "Content-Type, Authorization"
+            )
+            response.headers["Access-Control-Allow-Methods"] = (
+                "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+            )
             response.headers["Access-Control-Max-Age"] = "600"
             response.headers["Vary"] = "Origin"
         return response
