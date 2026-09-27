@@ -21,8 +21,8 @@ def create_app():
 
     JWTManager(app)
 
-    initialize_database(app)
-
+    # Register CORS before database initialization so even startup/runtime
+    # failures can be handled consistently by the app's request pipeline.
     allowed_origins = [
         "https://rhythm-emotion-aware-music-recommendation-platform.vercel.app",
         "http://localhost:5173",
@@ -69,20 +69,6 @@ def create_app():
             response.headers["Vary"] = "Origin"
 
         return response
-
-    @app.route("/api/emotion/detect", methods=["OPTIONS"])
-    def emotion_detect_options():
-        response = jsonify({"success": True})
-        origin = request.headers.get("Origin")
-        if origin in allowed_origins:
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Headers"] = (
-                "Content-Type, Authorization"
-            )
-            response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
-            response.headers["Access-Control-Max-Age"] = "600"
-            response.headers["Vary"] = "Origin"
-        return response, 204
 
     @app.get("/")
     def index():
