@@ -23,9 +23,11 @@ def health_check():
             "database": "connected"
         }), 200
 
-    except Exception:
+    except Exception as exc:
         return jsonify({
             "status": "error",
             "service": "rhythm-api",
-            "database": "unavailable"
+            "database": "unavailable",
+            "error": str(exc),
+            "error_type": type(exc).__name__,
         }), 503
